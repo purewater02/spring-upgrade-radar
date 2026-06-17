@@ -1,0 +1,97 @@
+name: "Spring Upgrade Radar"
+description: "Generate a Spring Boot 3 migration risk report, roadmap, and migration tickets."
+author: "pure"
+
+branding:
+  icon: "activity"
+  color: "green"
+
+inputs:
+  project-path:
+    description: "Path to the Spring Boot project to scan."
+    required: false
+    default: "."
+  target-version:
+    description: "Target Spring Boot version."
+    required: false
+    default: "3.5"
+  output-dir:
+    description: "Directory where reports and exports will be written."
+    required: false
+    default: "spring-upgrade-radar-output"
+  fail-on-risk:
+    description: "Optional numeric risk threshold. If set, fail the workflow when risk_score >= threshold."
+    required: false
+    default: ""
+
+outputs:
+  report-path:
+    description: "Path to the generated Markdown report."
+    value: ${{ steps.scan.outputs.report-path }}
+  html-report-path:
+    description: "Path to the generated HTML report."
+    value: ${{ steps.scan.outputs.html-report-path }}
+  tickets-json-path:
+    description: "Path to the generated migration tickets JSON."
+    value: ${{ steps.scan.outputs.tickets-json-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up output directory
+      shell: bash
+      run: mkdir -p "${{ inputs.output-dir }}"
+
+    - name: Install Spring Upgrade Radar
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install "${{ github.action_path }}"
+
+    - name: Run scan
+      id: scan
+      shell: bash
+      run: |
+        REPORT="${{ inputs.output-dir }}/report.md"
+        HTML_REPORT="${{ inputs.output-dir }}/report.html"
+        TICKETS_JSON="${{ inputs.output-dir }}/tickets.json"
+        JIRA_CSV="${{ inputs.output-dir }}/jira.csv"
+        GITHUB_ISSUES="${{ inputs.output-dir }}/github-issues.md"
+
+        spring-upgrade-radar scan "${{ inputs.project-path }}" \
+          --target "${{ inputs.target-version }}" \
+          --output "$REPORT" \
+          --html-output "$HTML_REPORT" \
+          --tickets-json "$TICKETS_JSON" \
+          --jira-csv "$JIRA_CSV" \
+          --github-issues-md "$GITHUB_ISSUES"
+
+        echo "report-path=$REPORT" >> "$GITHUB_OUTPUT"
+        echo "html-report-path=$HTML_REPORT" >> "$GITHUB_OUTPUT"
+        echo "tickets-json-path=$TICKETS_JSON" >> "$GITHUB_OUTPUT"
+
+        echo "## Spring Upgrade Radar" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        sed -n '1,80p' "$REPORT" >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Fail on risk threshold
+      if: ${{ inputs.fail-on-risk != '' }}
+      shell: bash
+      run: |
+        python - <<'PY'
+        import json
+        import os
+        import sys
+
+        threshold = int(os.environ["FAIL_ON_RISK"])
+        tickets_path = os.environ["TICKETS_JSON"]
+        with open(tickets_path, encoding="utf-8") as f:
+            payload = json.load(f)
+        risk_score = int(payload.get("risk_score", 0))
+        print(f"Spring Upgrade Radar risk_score={risk_score}, threshold={threshold}")
+        if risk_score >= threshold:
+            sys.exit(1)
+        PY
+      env:
+        FAIL_ON_RISK: ${{ inputs.fail-on-risk }}
+        TICKETS_JSON: ${{ inputs.output-dir }}/tickets.json

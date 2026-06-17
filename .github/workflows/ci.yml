@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Run demo scan
+        run: |
+          spring-upgrade-radar scan examples/demo-spring-boot-27 \
+            --target 3.5 \
+            --output /tmp/spring-upgrade-radar-report.md \
+            --html-output /tmp/spring-upgrade-radar-report.html \
+            --tickets-json /tmp/spring-upgrade-radar-tickets.json \
+            --jira-csv /tmp/spring-upgrade-radar-jira.csv \
+            --github-issues-md /tmp/spring-upgrade-radar-github-issues.md
+          test -s /tmp/spring-upgrade-radar-report.md
+          test -s /tmp/spring-upgrade-radar-tickets.json

@@ -1,0 +1,12 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.18'
+}
+
+sourceCompatibility = '11'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+}

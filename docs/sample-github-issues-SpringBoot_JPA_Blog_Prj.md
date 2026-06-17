@@ -1,0 +1,259 @@
+# GitHub Issues - Spring Upgrade Radar
+
+Project: `/home/puredev/Documents/GitHub/SpringBoot_JPA_Blog_Prj`
+Target Spring Boot: `3.5`
+Risk score: `100/100`
+
+Use each section as a copy/paste-ready GitHub issue, or turn the title/body/labels into `gh issue create` calls.
+
+## Issue SUR-001
+
+### Title
+[SUR-001] Spring Boot 2.x → 3.x 대형 마이그레이션
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:high
+
+### Body
+#### Why
+현재 2.6.2, 목표 3.5. Java 17 baseline과 Jakarta 전환이 필요합니다.
+
+#### Evidence
+- `spring_boot_version=2.6.2`
+
+#### Suggested change
+Java 17+ 전환, javax→jakarta import 정리, Spring Security/Hibernate 변경점을 먼저 분리하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `high`
+- Rough effort: `L`
+- Rule: `spring-boot-2-to-3`
+
+### gh command
+```bash
+gh issue create --title "[SUR-001] Spring Boot 2.x → 3.x 대형 마이그레이션" --label "spring-upgrade-radar, spring-boot-3, migration, severity:high" --body-file <body-file>
+```
+
+## Issue SUR-002
+
+### Title
+[SUR-002] Java 17 baseline 미달
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:high
+
+### Body
+#### Why
+현재 Java 8. Spring Boot 3.x는 Java 17 이상이 필요합니다.
+
+#### Evidence
+- `java_version=8`
+
+#### Suggested change
+먼저 JDK 17/21 빌드와 런타임 호환성을 확보하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `high`
+- Rough effort: `L`
+- Rule: `java-baseline`
+
+### gh command
+```bash
+gh issue create --title "[SUR-002] Java 17 baseline 미달" --label "spring-upgrade-radar, spring-boot-3, migration, severity:high" --body-file <body-file>
+```
+
+## Issue SUR-003
+
+### Title
+[SUR-003] JPA javax.persistence import 발견
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:high
+
+### Body
+#### Why
+10개 이상의 JPA import가 Jakarta Persistence 전환 대상입니다.
+
+#### Evidence
+- `blog/src/main/java/com/pure/blog/model/User.java:5: import javax.persistence.Column;`
+- `blog/src/main/java/com/pure/blog/model/User.java:6: import javax.persistence.Entity;`
+- `blog/src/main/java/com/pure/blog/model/User.java:7: import javax.persistence.EnumType;`
+- `blog/src/main/java/com/pure/blog/model/User.java:8: import javax.persistence.Enumerated;`
+- `blog/src/main/java/com/pure/blog/model/User.java:9: import javax.persistence.GeneratedValue;`
+- `blog/src/main/java/com/pure/blog/model/User.java:10: import javax.persistence.GenerationType;`
+- `blog/src/main/java/com/pure/blog/model/User.java:11: import javax.persistence.Id;`
+- `blog/src/main/java/com/pure/blog/model/Reply.java:5: import javax.persistence.Column;`
+- `blog/src/main/java/com/pure/blog/model/Reply.java:6: import javax.persistence.Entity;`
+- `blog/src/main/java/com/pure/blog/model/Reply.java:7: import javax.persistence.GeneratedValue;`
+
+#### Suggested change
+javax.persistence.*를 jakarta.persistence.*로 전환하고 Hibernate 6/JPA 3 호환성을 엔티티/레포지토리 테스트로 검증하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `high`
+- Rough effort: `L`
+- Rule: `jakarta-persistence-imports`
+
+### gh command
+```bash
+gh issue create --title "[SUR-003] JPA javax.persistence import 발견" --label "spring-upgrade-radar, spring-boot-3, migration, severity:high" --body-file <body-file>
+```
+
+## Issue SUR-004
+
+### Title
+[SUR-004] Spring Security 5 스타일 설정 발견
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:high
+
+### Body
+#### Why
+WebSecurityConfigurerAdapter/authorizeRequests/antMatchers/EnableGlobalMethodSecurity는 Spring Security 6 전환 시 SecurityFilterChain/requestMatchers/EnableMethodSecurity 패턴으로 재작성해야 합니다.
+
+#### Evidence
+- `blog/src/main/java/com/pure/blog/config/SecurityConfig.java: WebSecurityConfigurerAdapter`
+- `blog/src/main/java/com/pure/blog/config/SecurityConfig.java: authorizeRequests()`
+- `blog/src/main/java/com/pure/blog/config/SecurityConfig.java: antMatchers(`
+- `blog/src/main/java/com/pure/blog/config/SecurityConfig.java: @EnableGlobalMethodSecurity`
+
+#### Suggested change
+SecurityFilterChain @Bean 기반으로 재작성하고 antMatchers→requestMatchers, authorizeRequests→authorizeHttpRequests로 분리 마이그레이션하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `high`
+- Rough effort: `L`
+- Rule: `spring-security-legacy-config`
+
+### gh command
+```bash
+gh issue create --title "[SUR-004] Spring Security 5 스타일 설정 발견" --label "spring-upgrade-radar, spring-boot-3, migration, severity:high" --body-file <body-file>
+```
+
+## Issue SUR-005
+
+### Title
+[SUR-005] JSP view stack 발견
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:medium
+
+### Body
+#### Why
+JSP view stack은 Spring Boot 3/Tomcat 10의 jakarta.servlet 환경에서 taglib와 렌더링 호환성 점검이 필요합니다.
+
+#### Evidence
+- `blog/src/main/webapp/WEB-INF/views/index.jsp`
+- `blog/src/main/webapp/WEB-INF/views/user/updateForm.jsp`
+- `blog/src/main/webapp/WEB-INF/views/user/loginForm.jsp`
+- `blog/src/main/webapp/WEB-INF/views/user/joinForm.jsp`
+- `blog/src/main/webapp/WEB-INF/views/board/updateForm.jsp`
+- `blog/src/main/webapp/WEB-INF/views/board/detail.jsp`
+- `blog/src/main/webapp/WEB-INF/views/board/writeForm.jsp`
+- `blog/src/main/webapp/WEB-INF/views/layout/footer.jsp`
+- `blog/src/main/webapp/WEB-INF/views/layout/header.jsp`
+- `blog/src/main/resources/application.yml: spring.mvc.view JSP configuration`
+
+#### Suggested change
+JSP/JSTL 의존성을 Jakarta 호환 좌표로 전환하고 주요 view 렌더링 회귀 테스트를 추가하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `medium`
+- Rough effort: `M`
+- Rule: `jsp-jstl-jakarta`
+
+### gh command
+```bash
+gh issue create --title "[SUR-005] JSP view stack 발견" --label "spring-upgrade-radar, spring-boot-3, migration, severity:medium" --body-file <body-file>
+```
+
+## Issue SUR-006
+
+### Title
+[SUR-006] MySQL Connector/J 좌표 변경 점검
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:low
+
+### Body
+#### Why
+구형 mysql:mysql-connector-java 좌표를 사용 중입니다. 최신 Connector/J는 com.mysql:mysql-connector-j 좌표를 사용합니다.
+
+#### Evidence
+- `mysql:mysql-connector-java`
+
+#### Suggested change
+com.mysql:mysql-connector-j로 전환하고 드라이버 클래스 자동 감지를 확인하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `low`
+- Rough effort: `S`
+- Rule: `mysql-connector-coordinates`
+
+### gh command
+```bash
+gh issue create --title "[SUR-006] MySQL Connector/J 좌표 변경 점검" --label "spring-upgrade-radar, spring-boot-3, migration, severity:low" --body-file <body-file>
+```
+
+## Issue SUR-007
+
+### Title
+[SUR-007] Maven Wrapper 실행 권한 누락
+
+### Labels
+spring-upgrade-radar, spring-boot-3, migration, severity:low
+
+### Body
+#### Why
+CI나 로컬 검증에서 ./mvnw test가 권한 문제로 실패할 수 있습니다.
+
+#### Evidence
+- `blog/mvnw is not executable`
+
+#### Suggested change
+chmod +x blog/mvnw를 실행하고 wrapper 기반 검증 명령을 CI에 사용하세요.
+
+#### Validation
+```bash
+cd blog && ./mvnw test
+```
+
+#### Planning
+- Severity: `low`
+- Rough effort: `S`
+- Rule: `maven-wrapper-executable`
+
+### gh command
+```bash
+gh issue create --title "[SUR-007] Maven Wrapper 실행 권한 누락" --label "spring-upgrade-radar, spring-boot-3, migration, severity:low" --body-file <body-file>
+```

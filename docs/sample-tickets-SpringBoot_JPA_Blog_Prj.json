@@ -1,0 +1,122 @@
+{
+  "project": "/home/puredev/Documents/GitHub/SpringBoot_JPA_Blog_Prj",
+  "build_tool": "maven",
+  "spring_boot_version": "2.6.2",
+  "java_version": "8",
+  "target_boot": "3.5",
+  "risk_score": 100,
+  "tickets": [
+    {
+      "id": "SUR-001",
+      "title": "Spring Boot 2.x → 3.x 대형 마이그레이션",
+      "rule_id": "spring-boot-2-to-3",
+      "severity": "high",
+      "why": "현재 2.6.2, 목표 3.5. Java 17 baseline과 Jakarta 전환이 필요합니다.",
+      "evidence": [
+        "spring_boot_version=2.6.2"
+      ],
+      "suggested_change": "Java 17+ 전환, javax→jakarta import 정리, Spring Security/Hibernate 변경점을 먼저 분리하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "L"
+    },
+    {
+      "id": "SUR-002",
+      "title": "Java 17 baseline 미달",
+      "rule_id": "java-baseline",
+      "severity": "high",
+      "why": "현재 Java 8. Spring Boot 3.x는 Java 17 이상이 필요합니다.",
+      "evidence": [
+        "java_version=8"
+      ],
+      "suggested_change": "먼저 JDK 17/21 빌드와 런타임 호환성을 확보하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "L"
+    },
+    {
+      "id": "SUR-003",
+      "title": "JPA javax.persistence import 발견",
+      "rule_id": "jakarta-persistence-imports",
+      "severity": "high",
+      "why": "10개 이상의 JPA import가 Jakarta Persistence 전환 대상입니다.",
+      "evidence": [
+        "blog/src/main/java/com/pure/blog/model/User.java:5: import javax.persistence.Column;",
+        "blog/src/main/java/com/pure/blog/model/User.java:6: import javax.persistence.Entity;",
+        "blog/src/main/java/com/pure/blog/model/User.java:7: import javax.persistence.EnumType;",
+        "blog/src/main/java/com/pure/blog/model/User.java:8: import javax.persistence.Enumerated;",
+        "blog/src/main/java/com/pure/blog/model/User.java:9: import javax.persistence.GeneratedValue;",
+        "blog/src/main/java/com/pure/blog/model/User.java:10: import javax.persistence.GenerationType;",
+        "blog/src/main/java/com/pure/blog/model/User.java:11: import javax.persistence.Id;",
+        "blog/src/main/java/com/pure/blog/model/Reply.java:5: import javax.persistence.Column;",
+        "blog/src/main/java/com/pure/blog/model/Reply.java:6: import javax.persistence.Entity;",
+        "blog/src/main/java/com/pure/blog/model/Reply.java:7: import javax.persistence.GeneratedValue;"
+      ],
+      "suggested_change": "javax.persistence.*를 jakarta.persistence.*로 전환하고 Hibernate 6/JPA 3 호환성을 엔티티/레포지토리 테스트로 검증하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "L"
+    },
+    {
+      "id": "SUR-004",
+      "title": "Spring Security 5 스타일 설정 발견",
+      "rule_id": "spring-security-legacy-config",
+      "severity": "high",
+      "why": "WebSecurityConfigurerAdapter/authorizeRequests/antMatchers/EnableGlobalMethodSecurity는 Spring Security 6 전환 시 SecurityFilterChain/requestMatchers/EnableMethodSecurity 패턴으로 재작성해야 합니다.",
+      "evidence": [
+        "blog/src/main/java/com/pure/blog/config/SecurityConfig.java: WebSecurityConfigurerAdapter",
+        "blog/src/main/java/com/pure/blog/config/SecurityConfig.java: authorizeRequests()",
+        "blog/src/main/java/com/pure/blog/config/SecurityConfig.java: antMatchers(",
+        "blog/src/main/java/com/pure/blog/config/SecurityConfig.java: @EnableGlobalMethodSecurity"
+      ],
+      "suggested_change": "SecurityFilterChain @Bean 기반으로 재작성하고 antMatchers→requestMatchers, authorizeRequests→authorizeHttpRequests로 분리 마이그레이션하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "L"
+    },
+    {
+      "id": "SUR-005",
+      "title": "JSP view stack 발견",
+      "rule_id": "jsp-jstl-jakarta",
+      "severity": "medium",
+      "why": "JSP view stack은 Spring Boot 3/Tomcat 10의 jakarta.servlet 환경에서 taglib와 렌더링 호환성 점검이 필요합니다.",
+      "evidence": [
+        "blog/src/main/webapp/WEB-INF/views/index.jsp",
+        "blog/src/main/webapp/WEB-INF/views/user/updateForm.jsp",
+        "blog/src/main/webapp/WEB-INF/views/user/loginForm.jsp",
+        "blog/src/main/webapp/WEB-INF/views/user/joinForm.jsp",
+        "blog/src/main/webapp/WEB-INF/views/board/updateForm.jsp",
+        "blog/src/main/webapp/WEB-INF/views/board/detail.jsp",
+        "blog/src/main/webapp/WEB-INF/views/board/writeForm.jsp",
+        "blog/src/main/webapp/WEB-INF/views/layout/footer.jsp",
+        "blog/src/main/webapp/WEB-INF/views/layout/header.jsp",
+        "blog/src/main/resources/application.yml: spring.mvc.view JSP configuration"
+      ],
+      "suggested_change": "JSP/JSTL 의존성을 Jakarta 호환 좌표로 전환하고 주요 view 렌더링 회귀 테스트를 추가하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "M"
+    },
+    {
+      "id": "SUR-006",
+      "title": "MySQL Connector/J 좌표 변경 점검",
+      "rule_id": "mysql-connector-coordinates",
+      "severity": "low",
+      "why": "구형 mysql:mysql-connector-java 좌표를 사용 중입니다. 최신 Connector/J는 com.mysql:mysql-connector-j 좌표를 사용합니다.",
+      "evidence": [
+        "mysql:mysql-connector-java"
+      ],
+      "suggested_change": "com.mysql:mysql-connector-j로 전환하고 드라이버 클래스 자동 감지를 확인하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "S"
+    },
+    {
+      "id": "SUR-007",
+      "title": "Maven Wrapper 실행 권한 누락",
+      "rule_id": "maven-wrapper-executable",
+      "severity": "low",
+      "why": "CI나 로컬 검증에서 ./mvnw test가 권한 문제로 실패할 수 있습니다.",
+      "evidence": [
+        "blog/mvnw is not executable"
+      ],
+      "suggested_change": "chmod +x blog/mvnw를 실행하고 wrapper 기반 검증 명령을 CI에 사용하세요.",
+      "validation_command": "cd blog && ./mvnw test",
+      "rough_effort": "S"
+    }
+  ]
+}
