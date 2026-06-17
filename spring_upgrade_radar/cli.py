@@ -10,6 +10,12 @@ from spring_upgrade_radar.report import (
 from spring_upgrade_radar.scanner import scan_project
 
 
+def write_output(path: str, content: str) -> None:
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(content)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="spring-upgrade-radar")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -31,24 +37,24 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Risk score: {report.score}/100")
         print(f"Findings: {len(report.findings)}")
         if args.output:
-            Path(args.output).write_text(markdown)
+            write_output(args.output, markdown)
             print(f"Markdown report: {args.output}")
         else:
             print(markdown)
         if args.html_output:
-            Path(args.html_output).write_text(render_html(report))
+            write_output(args.html_output, render_html(report))
             print(f"HTML report: {args.html_output}")
         if args.tickets_json:
-            Path(args.tickets_json).write_text(render_tickets_json(report))
+            write_output(args.tickets_json, render_tickets_json(report))
             print(f"Tickets JSON: {args.tickets_json}")
         if args.jira_csv:
-            Path(args.jira_csv).write_text(render_jira_csv(report))
+            write_output(args.jira_csv, render_jira_csv(report))
             print(f"Jira CSV: {args.jira_csv}")
         if args.github_issues_md:
-            Path(args.github_issues_md).write_text(render_github_issues_markdown(report))
+            write_output(args.github_issues_md, render_github_issues_markdown(report))
             print(f"GitHub issues Markdown: {args.github_issues_md}")
         if args.exec_summary_md:
-            Path(args.exec_summary_md).write_text(render_executive_summary(report))
+            write_output(args.exec_summary_md, render_executive_summary(report))
             print(f"Executive Summary: {args.exec_summary_md}")
         return 0
     return 2

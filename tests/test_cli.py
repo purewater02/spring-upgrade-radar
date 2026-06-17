@@ -79,6 +79,50 @@ sourceCompatibility = '11'
             self.assertEqual(jira_rows[0]["Summary"], "[SUR-001] Spring Boot 2.x → 3.x 대형 마이그레이션")
             self.assertIn("## Issue SUR-001", github_issues.read_text())
 
+    def test_cli_creates_parent_directories_for_outputs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "app"
+            root.mkdir()
+            (root / "build.gradle").write_text(
+                """
+plugins {
+    id 'org.springframework.boot' version '2.7.18'
+}
+sourceCompatibility = '11'
+""".strip()
+            )
+            out_dir = Path(tmp) / "nested" / "reports"
+            markdown = out_dir / "report.md"
+            html = out_dir / "report.html"
+            tickets_json = out_dir / "tickets.json"
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "spring_upgrade_radar.cli",
+                    "scan",
+                    str(root),
+                    "--target",
+                    "3.5",
+                    "--output",
+                    str(markdown),
+                    "--html-output",
+                    str(html),
+                    "--tickets-json",
+                    str(tickets_json),
+                ],
+                cwd=Path(__file__).resolve().parents[1],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue(markdown.exists())
+            self.assertTrue(html.exists())
+            self.assertTrue(tickets_json.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

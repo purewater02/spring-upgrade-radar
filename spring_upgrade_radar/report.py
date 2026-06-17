@@ -319,9 +319,9 @@ def render_executive_summary(report: ScanReport) -> str:
         "",
         f"| Score Range | Grade | Description |",
         f"|---|---|---|",
-        f"| 70-100 | 🔴 **{grade}** | 대규모 마이그레이션 필요 — Java 17+, Jakarta 전환, 테스트 재작성이 동시 필요 |",
-        f"| 30-69 | 🟡 **{grade}** | 표준 마이그레이션 — javax→jakarta 전환과 주요 API 변경점 확인 필요 |",
-        f"| 0-29 | 🟢 **{grade}** | 준비됨 — 작은 조정만 필요하거나 이미 근접 버전 |",
+        "| 70-100 | 🔴 **C (Critical)** | 대규모 마이그레이션 필요 — Java 17+, Jakarta 전환, 테스트 재작성이 동시 필요 |",
+        "| 30-69 | 🟡 **B (Ready)** | 표준 마이그레이션 — javax→jakarta 전환과 주요 API 변경점 확인 필요 |",
+        "| 0-29 | 🟢 **A (Excellent)** | 준비됨 — 작은 조정만 필요하거나 이미 근접 버전 |",
         "",
     ])
 

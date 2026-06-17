@@ -16,8 +16,8 @@
 | Score Range | Grade | Description |
 |---|---|---|
 | 70-100 | 🔴 **C (Critical)** | 대규모 마이그레이션 필요 — Java 17+, Jakarta 전환, 테스트 재작성이 동시 필요 |
-| 30-69 | 🟡 **C (Critical)** | 표준 마이그레이션 — javax→jakarta 전환과 주요 API 변경점 확인 필요 |
-| 0-29 | 🟢 **C (Critical)** | 준비됨 — 작은 조정만 필요하거나 이미 근접 버전 |
+| 30-69 | 🟡 **B (Ready)** | 표준 마이그레이션 — javax→jakarta 전환과 주요 API 변경점 확인 필요 |
+| 0-29 | 🟢 **A (Excellent)** | 준비됨 — 작은 조정만 필요하거나 이미 근접 버전 |
 
 ## ⚠️ Top 3 Risks
 

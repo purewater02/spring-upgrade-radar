@@ -211,6 +211,9 @@ sourceCompatibility = '11'
             self.assertIn(f"**{scanned.score}/100**", summary)
             # Grade should appear
             self.assertIn(_readiness_grade(scanned.score), summary)
+            self.assertIn("| 70-100 | 🔴 **C (Critical)** |", summary)
+            self.assertIn("| 30-69 | 🟡 **B (Ready)** |", summary)
+            self.assertIn("| 0-29 | 🟢 **A (Excellent)** |", summary)
             # Sprint backlog items should appear
             self.assertIn("Sprint", summary)
 
