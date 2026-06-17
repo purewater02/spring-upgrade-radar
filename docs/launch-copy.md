@@ -33,13 +33,25 @@ spring-upgrade-radar scan /path/to/your/spring-project \
 
 ### Title
 
-Spring Boot 2.7 to 3.x migration estimates in minutes, not meetings
+Spring Boot 3 migration: I built a local CLI that generates risk estimates in minutes
+
+### Alternative titles (A/B test if desired)
+
+- "Spring Boot 2.x → 3.x migration risk: estimate it before you start"
+- "No more guesswork: Spring Boot 3 migration estimates in minutes"
 
 ### Tags
 
 `springboot`, `java`, `opensource`, `devtools`, `migration`
 
+### Featured image suggestion
+
+Upload `docs/social-preview.png` as the featured image. The dark gradient with "Spring Upgrade Radar" and "Spring Boot 3 migration estimates in minutes" matches Dev.to's dark header style.
+
 ### Body
+
+```markdown
+# Spring Boot 3 migration: I built a local CLI that generates risk estimates in minutes
 
 Spring Boot 3 is not just another dependency bump.
 
@@ -54,23 +66,28 @@ For many teams, the upgrade from Spring Boot 2.x to 3.x bundles several migratio
 
 The hard question usually comes before implementation:
 
-> What will break, how risky is it, and how many sprints should we reserve?
+> **What will break, how risky is it, and how many sprints should we reserve?**
 
 I built **Spring Upgrade Radar** as a local-first CLI to answer that planning question.
 
+## What it does
+
 It scans a Spring Boot Maven/Gradle project and generates:
 
-- executive summary
-- risk score and readiness grade
-- top migration risks
-- estimated roadmap
-- recommended sprint backlog
-- migration tickets
-- JSON, Jira CSV, and GitHub Issues Markdown exports
+- Executive summary (1-page overview for CTOs, EMs, tech leads)
+- Risk score and readiness grade (e.g. 75/100, Grade B)
+- Top migration risks (ranked by impact)
+- Estimated roadmap (sprint-by-sprint)
+- Recommended sprint backlog (prioritized)
+- Migration tickets in multiple formats: JSON, Jira CSV, GitHub Issues Markdown
 
-It runs locally by default, so your source code does not need to leave your machine.
+## Why local-first matters
 
-Quick start:
+Your source code does not need to leave your machine.
+
+Many teams cannot upload production code to a hosted service. This tool runs locally, in your own CI, or on a private runner. The default workflow generates a full migration report without uploading source code.
+
+## Quick start
 
 ```bash
 git clone https://github.com/purewater02/spring-upgrade-radar.git
@@ -88,13 +105,70 @@ spring-upgrade-radar scan /path/to/your/spring-project \
   --github-issues-md out/github-issues.md
 ```
 
-Links:
+## Example output
+
+Here's what the Executive Summary looks like for a typical Spring Boot 2.7 → 3.5 project:
+
+```markdown
+# Executive Summary
+
+- Spring Boot: 2.6.2 → 3.5
+- Java: 8
+- Risk score: 100/100 | Grade: C (Critical)
+
+## ⚠️ Top 3 Risks
+1. Spring Boot 2.x → 3.x major migration
+2. Java 17 baseline gap
+3. JPA javax.persistence imports
+
+## 🗺️ Estimated Roadmap
+- Sprint 1: Java 17+ build/runtime baseline — Estimated Time: 2 weeks
+- Sprint 2: javax → jakarta namespace migration — Estimated Time: 2 weeks
+- Sprint 3: dependency major upgrades — Estimated Time: 2 weeks
+- Sprint 4: Spring Boot 3.x migration validation — Estimated Time: 1 week
+```
+
+A full report includes evidence for each finding and actionable ticket exports for Jira and GitHub Issues.
+
+## Current check scope
+
+v0.1.0 covers intentionally narrow checks:
+
+- Spring Boot 2.x → 3.x migration risk
+- Java baseline compatibility
+- Jakarta Persistence import migration (`javax.persistence` → `jakarta.persistence`)
+- Spring Security legacy configuration patterns
+- JSP/JSTL Jakarta compatibility risks
+- MySQL Connector/J coordinate migration
+- Wrapper/CI execution readiness
+
+More rules will be added in subsequent releases.
+
+## Links
 
 - Landing page: https://purewater02.github.io/spring-upgrade-radar/
 - GitHub repo: https://github.com/purewater02/spring-upgrade-radar/
 - Sample report: https://purewater02.github.io/spring-upgrade-radar/sample-report-SpringBoot_JPA_Blog_Prj.md
+- Migration checklist article: https://purewater02.github.io/spring-upgrade-radar/articles/spring-boot-27-to-3x-migration-checklist.html
 
-This is an early v0.1.0 release. Feedback and real-world Spring Boot edge cases would be very helpful.
+## Feedback wanted
+
+This is an early v0.1.0 release. I am especially interested in:
+
+- Real-world Spring Boot 2.x projects where this tool could have saved time
+- Edge cases and checks that are missing from v0.1.0
+- Feedback on the report format — is it useful for your team?
+
+Please file an issue on GitHub or open a discussion.
+```
+
+### Publishing checklist
+
+- [ ] Upload `docs/social-preview.png` as featured image
+- [ ] Verify all links render correctly on dev.to
+- [ ] Add the post to a relevant collection (e.g. "Open Source Tools")
+- [ ] Pin a comment with the GitHub link for visibility
+- [ ] Share the dev.to URL on LinkedIn, Twitter/X, and Reddit after publishing
 
 ---
 
