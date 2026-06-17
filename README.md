@@ -167,7 +167,9 @@ See [`docs/productization-plan.md`](docs/productization-plan.md) for the propose
 Marketing drafts:
 
 - [`docs/landing-page-copy.md`](docs/landing-page-copy.md)
+- [`docs/launch-copy.md`](docs/launch-copy.md)
 - [`docs/articles/spring-boot-27-to-3x-migration-checklist.md`](docs/articles/spring-boot-27-to-3x-migration-checklist.md)
+- [`docs/articles/spring-boot-27-to-3x-migration-checklist.html`](https://purewater02.github.io/spring-upgrade-radar/articles/spring-boot-27-to-3x-migration-checklist.html)
 
 ## Development
 
