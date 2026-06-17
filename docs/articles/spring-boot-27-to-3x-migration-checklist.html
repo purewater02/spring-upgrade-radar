@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A practical Spring Boot 2.7 to 3.x migration checklist covering Java 17, Jakarta, Spring Security 6, Hibernate 6, and migration tickets." />
+  <title>Spring Boot 2.7 to 3.x Migration Checklist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#08090a; --panel:#0f1011; --text:#f7f8f8; --muted:#d0d6e0; --subtle:#8a8f98; --brand:#7170ff; --border:rgba(255,255,255,.08); }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; font-feature-settings:"cv01","ss03"; }
+    a { color:#9aa3ff; text-decoration:none; }
+    header { border-bottom:1px solid var(--border); background:rgba(8,9,10,.86); position:sticky; top:0; backdrop-filter:blur(16px); }
+    .nav, main { width:min(860px, calc(100% - 36px)); margin:0 auto; }
+    .nav { min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand { color:var(--text); font-weight:590; }
+    .button { display:inline-flex; min-height:38px; align-items:center; padding:0 14px; border:1px solid var(--border); border-radius:8px; color:var(--text); background:rgba(255,255,255,.03); font-size:14px; }
+    main { padding:64px 0 90px; }
+    h1 { font-size:clamp(38px, 6vw, 64px); line-height:1; letter-spacing:-1.2px; font-weight:510; margin:0 0 20px; }
+    .lede { color:var(--subtle); font-size:19px; line-height:1.65; margin:0 0 42px; }
+    article { border:1px solid var(--border); border-radius:18px; background:rgba(255,255,255,.025); padding:clamp(22px, 4vw, 42px); }
+    h2 { margin:44px 0 12px; font-size:28px; letter-spacing:-.4px; font-weight:510; }
+    h2:first-child { margin-top:0; }
+    p, li { color:var(--muted); line-height:1.72; font-size:16px; }
+    code, pre { font-family:'JetBrains Mono',ui-monospace,monospace; }
+    code { color:#bfc5ff; }
+    pre { overflow:auto; border:1px solid var(--border); border-radius:14px; padding:18px; background:#0d0e0f; color:#d0d6e0; line-height:1.65; }
+    table { width:100%; border-collapse:collapse; margin:18px 0; color:var(--muted); }
+    th, td { border:1px solid var(--border); padding:10px; text-align:left; }
+    th { color:var(--text); background:rgba(255,255,255,.04); }
+    blockquote { border-left:3px solid var(--brand); margin:24px 0; padding:4px 0 4px 18px; color:var(--text); }
+    hr { border:0; border-top:1px solid var(--border); margin:38px 0; }
+    .cta { margin-top:42px; padding:22px; border:1px solid rgba(113,112,255,.34); border-radius:16px; background:rgba(113,112,255,.12); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a class="brand" href="../index.html">Spring Upgrade Radar</a>
+      <a class="button" href="https://github.com/purewater02/spring-upgrade-radar">GitHub</a>
+    </div>
+  </header>
+  <main>
+    <h1>Spring Boot 2.7 to 3.x Migration Checklist</h1>
+    <p class="lede">Spring Boot 3 is not just another dependency bump. Use this checklist to estimate Java 17, Jakarta, Spring Security 6, Hibernate 6, dependency, and CI risks before you start changing code.</p>
+    <article>
+      <h2>1. Confirm your current baseline</h2>
+      <p>Capture your Spring Boot version, Java version, build tool, Spring Security style, Hibernate/JPA usage, servlet/JSP/JSTL usage, database drivers, CI JDK, and test coverage.</p>
+      <blockquote>Spring Boot 3 requires Java 17+. If your project is still on Java 8 or 11, plan the Java migration before the Spring Boot version bump.</blockquote>
+
+      <h2>2. Move to Java 17+ first</h2>
+      <ul><li>update local JDK to 17 or 21</li><li>update CI runner JDK</li><li>update Maven/Gradle toolchain settings</li><li>run the full test suite before touching Spring Boot</li></ul>
+      <pre><code>./mvnw test
+# or
+./gradlew test</code></pre>
+
+      <h2>3. Scan for <code>javax.*</code> imports</h2>
+      <p>Spring Boot 3 is based on Jakarta EE 10. Review <code>javax.persistence.*</code>, <code>javax.validation.*</code>, <code>javax.servlet.*</code>, <code>javax.annotation.*</code>, and JSP/JSTL tag libraries.</p>
+      <pre><code>import javax.persistence.Entity;
+// becomes
+import jakarta.persistence.Entity;</code></pre>
+
+      <h2>4. Check Spring Security 5 → 6 changes</h2>
+      <p>Look for <code>WebSecurityConfigurerAdapter</code>, <code>authorizeRequests()</code>, <code>antMatchers()</code>, and <code>@EnableGlobalMethodSecurity</code>. Prefer separate PRs for security configuration rewrites.</p>
+
+      <h2>5. Review Hibernate 5 → 6 risks</h2>
+      <p>Check custom dialects, native queries, JPQL/HQL, naming strategies, enum mappings, date/time mappings, lazy loading assumptions, and repository integration tests.</p>
+
+      <h2>6. Check dependency compatibility</h2>
+      <table><thead><tr><th>Area</th><th>Current</th><th>Target</th><th>Risk</th></tr></thead><tbody><tr><td>Java</td><td>8/11</td><td>17/21</td><td>High</td></tr><tr><td>Spring Boot</td><td>2.7.x</td><td>3.x</td><td>High</td></tr><tr><td>Security</td><td>5.x</td><td>6.x</td><td>Medium/High</td></tr><tr><td>Hibernate</td><td>5.x</td><td>6.x</td><td>Medium/High</td></tr></tbody></table>
+
+      <h2>7. Split the migration into phases</h2>
+      <ul><li>Sprint 1: Java 17+ baseline</li><li>Sprint 2: Jakarta namespace migration</li><li>Sprint 3: major framework dependencies</li><li>Sprint 4: Spring Boot 3 upgrade validation</li></ul>
+
+      <h2>8. Generate migration tickets</h2>
+      <p>Each ticket should include title, risk category, why it matters, affected evidence, suggested change, validation command, and rough effort.</p>
+
+      <h2>9. Estimate before committing the team</h2>
+      <p>If you cannot quickly answer how many <code>javax.*</code> imports exist, whether Java 17 is green, and which framework changes are risky, run a migration scan first.</p>
+
+      <div class="cta">
+        <h2>Generate a free migration report</h2>
+        <p>Spring Upgrade Radar scans a Spring Boot project locally and generates an executive summary, risk score, estimated roadmap, migration tickets, and Jira/GitHub export files.</p>
+        <pre><code>spring-upgrade-radar scan /path/to/your/spring-project \
+  --target 3.5 \
+  --output out/report.md \
+  --html-output out/report.html \
+  --tickets-json out/tickets.json</code></pre>
+        <p><a href="https://github.com/purewater02/spring-upgrade-radar">View the project on GitHub →</a></p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

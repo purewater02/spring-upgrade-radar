@@ -2,6 +2,8 @@
 
 **Generate a Spring Boot 3 migration estimate before your upgrade breaks.**
 
+Landing page: https://purewater02.github.io/spring-upgrade-radar/
+
 Spring Upgrade Radar is a local-first scanner for Spring Boot projects. It inspects Maven/Gradle applications and generates a leader-ready migration report with risk score, top risks, estimated roadmap, and actionable tickets.
 
 > Positioning: **Spring Boot 3 migration estimate generator** — not just a static analyzer.
