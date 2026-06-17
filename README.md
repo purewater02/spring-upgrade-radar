@@ -162,6 +162,11 @@ The product wedge is migration planning, not generic linting:
 
 See [`docs/productization-plan.md`](docs/productization-plan.md) for the proposed packaging, pricing, and marketing plan.
 
+Marketing drafts:
+
+- [`docs/landing-page-copy.md`](docs/landing-page-copy.md)
+- [`docs/articles/spring-boot-27-to-3x-migration-checklist.md`](docs/articles/spring-boot-27-to-3x-migration-checklist.md)
+
 ## Development
 
 Run tests:
