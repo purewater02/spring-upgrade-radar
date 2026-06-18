@@ -72,7 +72,7 @@ A typical executive summary includes:
 ### Option 1: Run from source
 
 ```bash
-git clone https://github.com/<your-org>/spring-upgrade-radar.git
+git clone https://github.com/purewater02/spring-upgrade-radar.git
 cd spring-upgrade-radar
 python3 -m venv .venv
 . .venv/bin/activate
@@ -101,7 +101,7 @@ python3 -m spring_upgrade_radar.cli scan <path-to-spring-project> \
 
 ## GitHub Actions usage
 
-After publishing this repository as a GitHub Action, teams can run it in CI:
+Spring Upgrade Radar can run as a **free GitHub Action** in pull requests or on demand. The scan runs on your GitHub-hosted or self-hosted runner; no source code is uploaded to a hosted service.
 
 ```yaml
 name: Spring Upgrade Radar
@@ -123,17 +123,34 @@ jobs:
         with:
           python-version: "3.11"
       - name: Run Spring Upgrade Radar
-        uses: <your-org>/spring-upgrade-radar@v0.1.0
+        uses: purewater02/spring-upgrade-radar@v0.1.1
         with:
           project-path: "."
           target-version: "3.5"
+          output-dir: "spring-upgrade-radar-output"
+          # Optional: fail the workflow when risk_score >= this threshold.
+          # fail-on-risk: "90"
       - uses: actions/upload-artifact@v4
         with:
           name: spring-upgrade-radar-report
           path: spring-upgrade-radar-output/
 ```
 
+Marketplace listing note: the GitHub Action is free. Optional paid Pro Report / Team Assessment services are external add-ons, not paid GitHub Marketplace plans.
+
 See [`action.yml`](action.yml) for the local composite action definition.
+
+## Pricing
+
+Spring Upgrade Radar starts as a free, local-first developer tool. Paid services are optional review/assessment add-ons for teams that want a human-reviewed migration plan.
+
+| Plan | Price | Best for | Includes |
+|---|---:|---|---|
+| Free CLI + GitHub Action | $0 | Developers and OSS teams | Local scan, Markdown/HTML report, risk score, Jira CSV, GitHub Issues Markdown |
+| Pro Report | $49/repo | Teams validating one migration | Reviewed report, prioritized roadmap, dependency risk notes, async feedback |
+| Team Assessment | From $299/project | Multi-module or business-critical services | Multi-repo/multi-module analysis, sprint plan, CI rollout guidance |
+
+> The GitHub Action itself is free and can be used without a paid Marketplace plan. Paid services, if offered, are billed separately outside GitHub Marketplace while demand is validated.
 
 ## Current scan scope
 
@@ -170,6 +187,7 @@ Marketing drafts:
 
 - [`docs/landing-page-copy.md`](docs/landing-page-copy.md)
 - [`docs/launch-copy.md`](docs/launch-copy.md)
+- [`docs/marketplace-submission.md`](docs/marketplace-submission.md)
 - [`docs/articles/spring-boot-27-to-3x-migration-checklist.md`](docs/articles/spring-boot-27-to-3x-migration-checklist.md)
 - [`docs/articles/spring-boot-27-to-3x-migration-checklist.html`](https://purewater02.github.io/spring-upgrade-radar/articles/spring-boot-27-to-3x-migration-checklist.html)
 

@@ -1,6 +1,6 @@
 name: "Spring Upgrade Radar"
-description: "Generate a Spring Boot 3 migration risk report, roadmap, and migration tickets."
-author: "pure"
+description: "Free local-first Spring Boot 3 migration scanner for risk reports, roadmaps, and tickets."
+author: "purewater02"
 
 branding:
   icon: "activity"

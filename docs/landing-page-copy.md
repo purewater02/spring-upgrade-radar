@@ -119,35 +119,38 @@ Scan multiple services and prioritize the riskiest upgrades first.
 
 ## Pricing copy
 
-### Free CLI
+### Free CLI + GitHub Action
 
-For individual developers and early migration checks.
+For individual developers, OSS projects, and early migration checks.
 
 - Local scan
 - Markdown/HTML report
 - Risk score
 - Core findings
-- Migration tickets
+- Jira/GitHub ticket exports
+- CI artifact generation
 
-### Pro Report — proposed $29/report
+### Pro Report — optional $49/repo
 
-For teams that need a more complete planning artifact.
+For teams that need a reviewed planning artifact.
 
-- PDF report
-- dependency matrix
-- richer sprint roadmap
-- OpenRewrite recommendations
+- reviewed migration report
+- dependency risk notes
+- prioritized sprint roadmap
+- async feedback
 - PR/Jira-ready planning package
 
-### Team / Enterprise
+### Team Assessment — from $299/project
 
 For organizations with multiple Spring Boot services.
 
-- GitHub Action integration
-- scan history
-- multi-repo dashboard
-- private runner
+- multi-module/multi-repo review
+- CI rollout guidance
+- scan history strategy
+- private runner guidance
 - custom rules
+
+> The GitHub Action is free. Paid services are external add-ons while demand is validated.
 
 ---
 

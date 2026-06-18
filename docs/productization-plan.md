@@ -60,7 +60,7 @@ Purpose: simplest first revenue.
 
 Suggested offer:
 
-- **$29/report** for a richer migration planning pack
+- **$49/report** for a richer migration planning pack
 - no subscription friction
 - suitable for indie/startup teams
 
@@ -118,7 +118,7 @@ Use a **free migration assessment funnel**:
 3. Report footer offers:
    - “Get full migration plan”
    - “Book Spring Boot 3 upgrade assessment”
-   - “Generate Pro report — $29”
+   - “Generate Pro report — $49”
 4. Lead form collects email, repo metadata, Spring Boot version, number of services.
 5. Early sales can be manual/concierge before building full SaaS.
 
@@ -190,7 +190,7 @@ Message:
 Initial pricing copy:
 
 - Free CLI — local Markdown report
-- Pro Report — $29/report
+- Pro Report — $49/report
 - Team — early access
 
 ### Final CTA
@@ -243,7 +243,7 @@ Outbound message angle:
 3. Add productization plan document.
 4. Add report footer CTA in generated reports.
 5. Add `--fail-on-risk` support in CLI or document Action-level threshold.
-6. Create release tag `v0.1.0` after tests pass.
+6. Create release tag `v0.1.1` after tests pass.
 
 ### Week 2 — Demand validation
 
@@ -269,7 +269,7 @@ Outbound message angle:
 - requests for assessment
 - number of repos scanned manually
 - people asking about PDF/Jira/team features
-- first paid $29 report
+- first paid $49 report
 
 ## Immediate next product improvements
 
@@ -290,7 +290,7 @@ Prioritize features that strengthen the paid report narrative:
 | Too narrow market | Start with Spring Boot 2.x EOL pressure, expand to Java modernization later |
 | Users distrust static analysis | Keep report evidence-based with file/line references |
 | SaaS security objections | Lead with local-first CLI/GitHub Action/private runner |
-| Pricing uncertainty | Start with $29 one-off report and free manual assessments |
+| Pricing uncertainty | Start with $49 one-off report and free manual assessments |
 | Rule coverage too shallow | Market as migration estimate/radar, not complete automatic migration |
 
 ## Recommended next task

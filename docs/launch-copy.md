@@ -27,6 +27,46 @@ spring-upgrade-radar scan /path/to/your/spring-project \
   --github-issues-md out/github-issues.md
 ```
 
+## Canonical GitHub Action usage
+
+```yaml
+name: Spring Upgrade Radar
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "**/pom.xml"
+      - "**/build.gradle"
+      - "**/*.java"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: purewater02/spring-upgrade-radar@v0.1.1
+        with:
+          project-path: "."
+          target-version: "3.5"
+          output-dir: "spring-upgrade-radar-output"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spring-upgrade-radar-report
+          path: spring-upgrade-radar-output/
+```
+
+## Pricing note
+
+The CLI and GitHub Action are free and local-first. Optional paid services are external add-ons, not paid GitHub Marketplace plans:
+
+- Free CLI + GitHub Action: $0
+- Pro Report: $49/repo for a reviewed report and prioritized roadmap
+- Team Assessment: from $299/project for multi-module or critical services
+
 ---
 
 ## Dev.to draft
@@ -132,7 +172,7 @@ A full report includes evidence for each finding and actionable ticket exports f
 
 ## Current check scope
 
-v0.1.0 covers intentionally narrow checks:
+v0.1.1 covers intentionally narrow checks:
 
 - Spring Boot 2.x → 3.x migration risk
 - Java baseline compatibility
@@ -153,10 +193,10 @@ More rules will be added in subsequent releases.
 
 ## Feedback wanted
 
-This is an early v0.1.0 release. I am especially interested in:
+This is an early v0.1.1 release. I am especially interested in:
 
 - Real-world Spring Boot 2.x projects where this tool could have saved time
-- Edge cases and checks that are missing from v0.1.0
+- Edge cases and checks that are missing from v0.1.1
 - Feedback on the report format — is it useful for your team?
 
 Please file an issue on GitHub or open a discussion.
@@ -225,7 +265,7 @@ The goal is not automatic rewriting. It is migration estimation:
 Landing page: https://purewater02.github.io/spring-upgrade-radar/  
 Repo: https://github.com/purewater02/spring-upgrade-radar/
 
-It is v0.1.0, so the rule coverage is intentionally narrow. I would love feedback from people who have done real Spring Boot 3 migrations: what checks would have saved you the most time before starting?
+It is v0.1.1, so the rule coverage is intentionally narrow. I would love feedback from people who have done real Spring Boot 3 migrations: what checks would have saved you the most time before starting?
 
 ---
 
